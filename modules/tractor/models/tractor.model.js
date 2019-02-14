@@ -13,6 +13,10 @@ class TractorModel {
 
     return result;
   }
+
+  async getData() {
+    return await Tractor.findAll();
+  }
 }
 
 module.exports = {

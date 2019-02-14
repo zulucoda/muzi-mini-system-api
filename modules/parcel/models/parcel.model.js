@@ -9,13 +9,15 @@ class ParcelModel {
   }
 
   async create() {
-    const result = await Parcel.create({
+    return await Parcel.create({
       name: this.name,
       culture: this.culture,
       area: this.area,
     });
+  }
 
-    return result;
+  async getData() {
+    return await Parcel.findAll();
   }
 }
 

@@ -19,6 +19,10 @@ class ProcessedParcelModel {
 
     return result;
   }
+
+  async getData() {
+    return await ProcessedParcel.findAll();
+  }
 }
 
 module.exports = {

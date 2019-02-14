@@ -13,6 +13,15 @@ const create = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
+const list = (req, res) => {
+  const parcel = new ParcelModel();
+  return parcel
+    .getData()
+    .then(data => res.status(201).send(data))
+    .catch(error => res.status(400).send(error));
+};
+
 module.exports = {
   create,
+  list,
 };

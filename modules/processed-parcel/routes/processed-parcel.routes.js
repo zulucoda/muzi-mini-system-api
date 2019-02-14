@@ -1,7 +1,10 @@
 'use strict';
 
-const { create } = require('../controllers/processed-parcel.controller');
+const { create, list } = require('../controllers/processed-parcel.controller');
 
 module.exports = function(app, passport) {
-  app.route('/processed-parcel').post(create);
+  app
+    .route('/processed-parcel')
+    .post(create)
+    .get(list);
 };
