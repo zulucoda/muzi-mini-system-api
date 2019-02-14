@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     'ProcessedParcel',
     {
       date: DataTypes.DATE,
+      area: DataTypes.INTEGER,
     },
     {},
   );
