@@ -57,3 +57,14 @@ Generate model
 Generate model
 `node_modules/.bin/sequelize model:generate --name Tractor --attributes name:string`
 
+
+### Processed Parcel
+
+Belongs-To-Many associations
+- `Parcel` belongs to many `Tractor` through `ProcessedParcel`
+
+-`Tractor` belongs to many `Parcel` through `ProcessedParcel`
+
+Generate model
+`node_modules/.bin/sequelize model:generate --name ProcessedParcel --attributes date:date`
+

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
   );
   Parcel.associate = function(models) {
     // associations can be defined here
+    Parcel.belongsToMany(models.Tractor, {
+      through: 'ProcessedParcel',
+      foreignKey: 'parcelId',
+    });
   };
   return Parcel;
 };
