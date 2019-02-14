@@ -43,10 +43,17 @@ Following features need to be implemented
 create db
 `createdb zulucoda_dev`
 
+migrate db
+`node_modules/.bin/sequelize db:migrate`
+
+
 ### Parcel
 
 Generate model
 `node_modules/.bin/sequelize model:generate --name Parcel --attributes name:string,culture:string,area:integer`
 
-migrate db
-`node_modules/.bin/sequelize db:migrate`
+### Tractor
+
+Generate model
+`node_modules/.bin/sequelize model:generate --name Tractor --attributes name:string`
+

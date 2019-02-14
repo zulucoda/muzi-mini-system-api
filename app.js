@@ -12,5 +12,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 require('./modules/parcel/routes/parcel.routes')(app);
+require('./modules/tractor/routes/tractor.routes')(app);
 
 module.exports = app;

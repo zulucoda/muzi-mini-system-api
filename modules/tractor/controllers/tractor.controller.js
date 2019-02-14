@@ -1,13 +1,9 @@
 'use strict';
-const { ParcelModel } = require('../models/parcel.model');
+const { TractorModel } = require('../models/tractor.model');
 
 const create = (req, res) => {
-  const parcel = new ParcelModel(
-    req.body.name,
-    req.body.culture,
-    req.body.area,
-  );
-  return parcel
+  const tractor = new TractorModel(req.body.name);
+  return tractor
     .create()
     .then(data => res.status(201).send(data))
     .catch(error => res.status(400).send(error));
