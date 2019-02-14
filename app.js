@@ -2,8 +2,12 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const passport = require('passport');
+const localJwtStrategy = require('./config/strategies/local.jwt');
 
 const app = express();
+
+passport.use(localJwtStrategy.strategy);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -11,8 +15,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./modules/parcel/routes/parcel.routes')(app);
-require('./modules/tractor/routes/tractor.routes')(app);
-require('./modules/processed-parcel/routes/processed-parcel.routes')(app);
+app.use(passport.initialize());
+
+require('./modules/auth/routes/auth.routes')(app);
+require('./modules/parcel/routes/parcel.routes')(app, passport);
+require('./modules/tractor/routes/tractor.routes')(app, passport);
+require('./modules/processed-parcel/routes/processed-parcel.routes')(
+  app,
+  passport,
+);
 
 module.exports = app;

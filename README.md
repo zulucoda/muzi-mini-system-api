@@ -46,6 +46,13 @@ create db
 migrate db
 `node_modules/.bin/sequelize db:migrate`
 
+### Authentication
+
+Generate model
+`node_modules/.bin/sequelize model:generate --name User --attributes name:string,surname:string,email:string,password:string,salt:string`
+
+
+
 
 ### Parcel
 
