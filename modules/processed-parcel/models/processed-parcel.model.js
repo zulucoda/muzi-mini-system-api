@@ -1,5 +1,10 @@
 'use strict';
-const { ProcessedParcel } = require('../../../db/repository/index');
+const {
+  ProcessedParcel,
+  Parcel,
+  Tractor,
+} = require('../../../db/repository/index');
+const db = require('../../../db/repository/index');
 
 class ProcessedParcelModel {
   constructor(parcelId, tractorId, dateProcessed, area) {
@@ -21,7 +26,30 @@ class ProcessedParcelModel {
   }
 
   async getData() {
-    return await ProcessedParcel.findAll();
+    const results = await db.sequelize.query(`
+SELECT
+  "Parcels".id,
+  "Parcels".name AS "ParcelName",
+  "Parcels".culture,
+  "ProcessedParcels".id,
+  "ProcessedParcels"."parcelId",
+  "ProcessedParcels"."tractorId",
+  "ProcessedParcels".date,
+  "ProcessedParcels".area,
+  "ProcessedParcels"."createdAt",
+  "ProcessedParcels"."updatedAt",
+  "Tractors".name AS "TractorName"
+FROM
+  public."Parcels",
+  public."ProcessedParcels",
+  public."Tractors"
+WHERE
+  "Parcels".id = "ProcessedParcels"."parcelId" AND
+  "Tractors".id = "ProcessedParcels"."parcelId";
+`);
+    if (results && results.length > 1) {
+      return results[0];
+    }
   }
 }
 
