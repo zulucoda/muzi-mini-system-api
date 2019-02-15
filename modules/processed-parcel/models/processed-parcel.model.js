@@ -1,17 +1,23 @@
 'use strict';
-const {
-  ProcessedParcel,
-  Parcel,
-  Tractor,
-} = require('../../../db/repository/index');
+const { ProcessedParcel } = require('../../../db/repository/index');
 const db = require('../../../db/repository/index');
 
 class ProcessedParcelModel {
-  constructor(parcelId, tractorId, dateProcessed, area) {
+  constructor(
+    parcelId,
+    tractorId,
+    dateProcessed,
+    area,
+    culture,
+    dateProcessedTo,
+  ) {
     this.parcelId = parcelId;
     this.tractorId = tractorId;
     this.dateProcessed = dateProcessed;
     this.area = area;
+
+    this.culture = culture;
+    this.dateProcessedTo = dateProcessedTo;
   }
 
   async create() {
@@ -45,7 +51,50 @@ FROM
   public."Tractors"
 WHERE
   "Parcels".id = "ProcessedParcels"."parcelId" AND
-  "Tractors".id = "ProcessedParcels"."parcelId";
+  "Tractors".id = "ProcessedParcels"."tractorId";
+`);
+    if (results && results.length > 1) {
+      return results[0];
+    }
+  }
+
+  async searchData() {
+    let searchQuery = '';
+    if (this.parcelId) {
+      searchQuery += `AND "Parcels".id = ${this.parcelId}`;
+    } else if (this.tractorId) {
+      searchQuery += ` AND "Tractors".id = ${this.tractorId}`;
+    } else if (this.dateProcessed && this.dateProcessedTo) {
+      searchQuery += `AND "ProcessedParcels".date BETWEEN '${
+        this.dateProcessed
+      }' AND '${this.dateProcessedTo}'`;
+    } else if (this.area) {
+      searchQuery += `AND "ProcessedParcels".area = '${this.area}'`;
+    } else if (this.culture) {
+      searchQuery += `AND "Parcels".culture LIKE '%${this.culture}%'`;
+    }
+
+    const results = await db.sequelize.query(`
+SELECT
+  "Parcels".id,
+  "Parcels".name AS "ParcelName",
+  "Parcels".culture,
+  "ProcessedParcels".id,
+  "ProcessedParcels"."parcelId",
+  "ProcessedParcels"."tractorId",
+  "ProcessedParcels".date,
+  "ProcessedParcels".area,
+  "ProcessedParcels"."createdAt",
+  "ProcessedParcels"."updatedAt",
+  "Tractors".name AS "TractorName"
+FROM
+  public."Parcels",
+  public."ProcessedParcels",
+  public."Tractors"
+WHERE
+  "Parcels".id = "ProcessedParcels"."parcelId" AND
+  "Tractors".id = "ProcessedParcels"."tractorId" 
+  ${searchQuery};
 `);
     if (results && results.length > 1) {
       return results[0];
