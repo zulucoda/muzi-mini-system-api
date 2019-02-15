@@ -4,10 +4,15 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
 const localJwtStrategy = require('./config/strategies/local.jwt');
+const cors = require('cors');
 
 const app = express();
 
 passport.use(localJwtStrategy.strategy);
+
+app.options('*', cors());
+
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
