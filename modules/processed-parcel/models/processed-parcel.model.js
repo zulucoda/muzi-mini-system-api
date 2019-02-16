@@ -1,6 +1,7 @@
 'use strict';
 const { ProcessedParcel } = require('../../../db/repository/index');
 const db = require('../../../db/repository/index');
+const moment = require('moment');
 
 class ProcessedParcelModel {
   constructor(
@@ -35,7 +36,7 @@ class ProcessedParcelModel {
     const results = await db.sequelize.query(`
 SELECT
   "Parcels".id,
-  "Parcels".name AS "ParcelName",
+  "Parcels".name AS "parcelName",
   "Parcels".culture,
   "ProcessedParcels".id,
   "ProcessedParcels"."parcelId",
@@ -44,7 +45,7 @@ SELECT
   "ProcessedParcels".area,
   "ProcessedParcels"."createdAt",
   "ProcessedParcels"."updatedAt",
-  "Tractors".name AS "TractorName"
+  "Tractors".name AS "tractorName"
 FROM
   public."Parcels",
   public."ProcessedParcels",
@@ -64,7 +65,12 @@ WHERE
       searchQuery += `AND "Parcels".id = ${this.parcelId}`;
     } else if (this.tractorId) {
       searchQuery += ` AND "Tractors".id = ${this.tractorId}`;
-    } else if (this.dateProcessed && this.dateProcessedTo) {
+    } else if (
+      this.dateProcessed &&
+      this.dateProcessedTo &&
+      moment(this.dateProcessed).isValid() === true &&
+      moment(this.dateProcessedTo).isValid() === true
+    ) {
       searchQuery += `AND "ProcessedParcels".date BETWEEN '${
         this.dateProcessed
       }' AND '${this.dateProcessedTo}'`;
@@ -77,7 +83,7 @@ WHERE
     const results = await db.sequelize.query(`
 SELECT
   "Parcels".id,
-  "Parcels".name AS "ParcelName",
+  "Parcels".name AS "parcelName",
   "Parcels".culture,
   "ProcessedParcels".id,
   "ProcessedParcels"."parcelId",
@@ -86,7 +92,7 @@ SELECT
   "ProcessedParcels".area,
   "ProcessedParcels"."createdAt",
   "ProcessedParcels"."updatedAt",
-  "Tractors".name AS "TractorName"
+  "Tractors".name AS "tractorName"
 FROM
   public."Parcels",
   public."ProcessedParcels",
